@@ -17,7 +17,7 @@ pub struct Lexer {
 
 pub fn lexer_create() -> Lexer {
     Lexer {
-        token_list: vec<Token>,
+        token_list: Some(Vec::new()),
         nb_token : 0}
 }
 
@@ -76,18 +76,18 @@ impl Lexer {
 fn get_token(line: &String) -> Token
 {
     let index = line.find('=');
-    if index.unwrap_or(usize::MAX) == usize::MAX
+    if index.unwrap_or(usize::MAX) != usize::MAX
     {
         return Token::Variable(line.to_string()); 
     }
 
     let index = line.find(':');
-    if index.unwrap_or(usize::MAX) == usize::MAX {
+    if index.unwrap_or(usize::MAX) != usize::MAX {
         return Token::Rule(line.to_string());
     }
 
     let index = line.find('\t');
-    if index.unwrap_or(usize::MAX) == usize::MAX {
+    if index.unwrap_or(usize::MAX) != usize::MAX {
         return Token::Command(line.to_string());
     }
 
