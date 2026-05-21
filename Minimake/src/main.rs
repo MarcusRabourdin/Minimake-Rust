@@ -1,7 +1,7 @@
 use std::{env, fmt::Result};
 
 use Minimake::file_gestion::file_verification::is_file;
-
+use Minimake::lexing::lexer::*;
 fn main() -> Result<> { 
      
     let _args: Vec<String> = env::args().collect(); 
@@ -19,7 +19,8 @@ fn main() -> Result<> {
         return Err(std::fmt::Error);
     }
     
-    //let makefile_data = lex(&file);
+    let makefile_data = lex(&file);
+    makefile_data.print();
 
     Ok(())
 }

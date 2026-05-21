@@ -17,7 +17,7 @@ pub struct Lexer {
 
 pub fn lexer_create() -> Lexer {
     Lexer {
-        token_list: None,
+        token_list: vec<Token>,
         nb_token : 0}
 }
 
@@ -51,13 +51,30 @@ impl Lexer {
         }
     }
     
+    pub fn print(&self) {
+        match &self.token_list {
+            None => panic!("Cannot print anything bc token_list is None"),
+            Some(l) => {
+                
+                for element in l {
+                   match element {
+                        Token::Rule(content) => println!("Rule: {:?}", content),
+                        Token::Command(content) => println!("Command: {}", content),
+                        Token::Variable(content) => println!("Variable: {}", content),
+                        Token::Other(content) => println!("Other: {}", content),
+                   } 
+                }
+            }
+            
+        }
+        
+    }
 
 
 }
 
 fn get_token(line: &String) -> Token
 {
-    
     let index = line.find('=');
     if index.unwrap_or(usize::MAX) == usize::MAX
     {
@@ -87,8 +104,7 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 }
 
 
-
-pub fn lex(file: &str) {
+pub fn lex(file: &str) -> Lexer {
     
     let mut lexer = lexer_create();
     if let Ok(lines) = read_lines(file) {
@@ -98,5 +114,6 @@ pub fn lex(file: &str) {
             lexer.add_token(token);
         }
     }
+    lexer
 }
 
