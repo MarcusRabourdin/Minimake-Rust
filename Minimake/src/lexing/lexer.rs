@@ -1,38 +1,39 @@
-use std::io;
+use std::{io, usize};
 use std::fs::File;
 use std::path::Path;
 use std::io::{BufRead};
 
-enum Token {
+pub enum Token {
     Variable(String),
     Rule(String),
     Command(String),
     Other(String),
 }
 
-struct Lexer {
+pub struct Lexer {
     token_list : Option<Vec<Token>>,
     nb_token : u32
 }
 
-impl Lexer {
-    pub fn create() -> Lexer {
-        Lexer {
-            token_list: None,
-            nb_token : 0}
-    }
+pub fn lexer_create() -> Lexer {
+    Lexer {
+        token_list: None,
+        nb_token : 0}
+}
 
-    fn increment_nb_token(mut self)
+
+impl Lexer {
+    fn increment_nb_token(&mut self)
     {
         self.nb_token +=1
     }
 
-    fn update_nb_token(mut self)
+    fn update_nb_token(&mut self)
     {   
         self.nb_token = self.token_list.iter().count() as u32
     }
 
-    pub fn add_token(mut self, token : Token)
+    pub fn add_token(&mut self, token : Token)
     {
         match self.token_list {
             Some(ref mut l) => {
@@ -43,14 +44,40 @@ impl Lexer {
         }
     }
 
-    pub fn get_first(self) -> Token {
-        match self.token_list {
+    pub fn get_first(&self) -> &Token {
+        match &self.token_list {
             Some(l) => l.first().unwrap(),
             None => panic!("No token left"),
         }
     }
+    
+
 
 }
+
+fn get_token(line: &String) -> Token
+{
+    
+    let index = line.find('=');
+    if index.unwrap_or(usize::MAX) == usize::MAX
+    {
+        return Token::Variable(line.to_string()); 
+    }
+
+    let index = line.find(':');
+    if index.unwrap_or(usize::MAX) == usize::MAX {
+        return Token::Rule(line.to_string());
+    }
+
+    let index = line.find('\t');
+    if index.unwrap_or(usize::MAX) == usize::MAX {
+        return Token::Command(line.to_string());
+    }
+
+    Token::Other(line.to_string())
+
+}
+
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
    where P: AsRef<Path>, {
@@ -62,11 +89,13 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 
 
 pub fn lex(file: &str) {
-
+    
+    let mut lexer = lexer_create();
     if let Ok(lines) = read_lines(file) {
         for line in lines.map_while(Result::ok)
         {
-
+            let token = get_token(&line);  
+            lexer.add_token(token);
         }
     }
 }
