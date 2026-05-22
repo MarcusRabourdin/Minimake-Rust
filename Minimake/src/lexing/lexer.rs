@@ -5,7 +5,7 @@ use std::io::{BufRead};
 
 pub enum Token {
     Variable(String),
-    Rule(String),
+    Rule(String,String),
     Command(String),
     Other(String),
 }
@@ -20,7 +20,6 @@ pub fn lexer_create() -> Lexer {
         token_list: Some(Vec::new()),
         nb_token : 0}
 }
-
 
 impl Lexer {
     fn increment_nb_token(&mut self)
@@ -58,10 +57,10 @@ impl Lexer {
                 
                 for element in l {
                    match element {
-                        Token::Rule(content) => println!("Rule: {:?}", content),
-                        Token::Command(content) => println!("Command: {}", content),
-                        Token::Variable(content) => println!("Variable: {}", content),
-                        Token::Other(content) => println!("Other: {}", content),
+                        Token::Rule(rule, dep) => println!("{}:{}", rule, dep),
+                        Token::Command(content) => println!("{}", content),
+                        Token::Variable(content) => println!("{}", content),
+                        Token::Other(content) => println!("{}", content),
                    } 
                 }
             }
@@ -69,7 +68,6 @@ impl Lexer {
         }
         
     }
-
 
 }
 
@@ -83,7 +81,11 @@ fn get_token(line: &String) -> Token
 
     let index = line.find(':');
     if index.unwrap_or(usize::MAX) != usize::MAX {
-        return Token::Rule(line.to_string());
+        let rule : &str = &line[0..index.unwrap()];
+        let mut dep : &str = &line[index.unwrap()+1..];
+        if dep == " " { dep = ""; }
+        else {dep.to_string().insert(0,' ')}
+        return Token::Rule(rule.to_string(),dep.to_string());
     }
 
     let index = line.find('\t');
