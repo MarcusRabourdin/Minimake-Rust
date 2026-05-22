@@ -80,10 +80,13 @@ fn get_token(line: &String) -> Token
     }
 
     let index = line.find(':');
+
     if index.unwrap_or(usize::MAX) != usize::MAX {
+
         let rule : &str = &line[0..index.unwrap()];
         let mut dep : &str = &line[index.unwrap()+1..];
         if dep == " " { dep = ""; }
+
         else {dep.to_string().insert(0,' ')}
         return Token::Rule(rule.to_string(),dep.to_string());
     }
