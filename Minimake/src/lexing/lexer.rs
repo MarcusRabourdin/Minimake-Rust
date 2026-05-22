@@ -69,6 +69,11 @@ impl Lexer {
         
     }
 
+    pub fn pretty_print(&self)
+    {
+        // TODO
+    }
+
 }
 
 fn get_token(line: &String) -> Token
