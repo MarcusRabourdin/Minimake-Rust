@@ -6,7 +6,7 @@ use std::io::{BufRead};
 pub enum Token {
     Variable(String),
     Rule(String,String),
-    Command(String),
+    Recipe(String),
     Other(String),
 }
 
@@ -58,7 +58,7 @@ impl Lexer {
                 for element in l {
                    match element {
                         Token::Rule(rule, dep) => println!("{}:{}", rule, dep),
-                        Token::Command(content) => println!("{}", content),
+                        Token::Recipe(content) => println!("{}", content),
                         Token::Variable(content) => println!("{}", content),
                         Token::Other(_) => {},
                    } 
@@ -93,7 +93,7 @@ fn get_token(line: &String) -> Token
 
     let index = line.find('\t');
     if index.unwrap_or(usize::MAX) != usize::MAX {
-        return Token::Command(line.to_string());
+        return Token::Recipe(line.to_string());
     }
 
     Token::Other(line.to_string())
