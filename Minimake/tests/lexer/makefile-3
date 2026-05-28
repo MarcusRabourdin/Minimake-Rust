@@ -1,0 +1,10 @@
+CC = gcc
+SRCS = main.c tests.c
+TARGET = target
+OBJS = main.o tests.o
+
+all: $(OBJS)
+	$(CC) $(OBJS) -c $(TARGET)
+
+$(OBJS): main.c tests.c
+	$(CC) $(SRCS) -c $(OBJS)
