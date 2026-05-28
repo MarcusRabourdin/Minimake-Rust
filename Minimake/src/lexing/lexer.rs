@@ -11,8 +11,8 @@ pub enum Token {
 }
 
 pub struct Lexer {
-    token_list : Option<Vec<Token>>,
-    nb_token : u32
+    pub token_list : Option<Vec<Token>>,
+    pub nb_token : u32
 }
 
 pub fn lexer_create() -> Lexer {
