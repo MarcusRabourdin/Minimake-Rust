@@ -60,7 +60,7 @@ impl Lexer {
                         Token::Rule(rule, dep) => println!("{}:{}", rule, dep),
                         Token::Command(content) => println!("{}", content),
                         Token::Variable(content) => println!("{}", content),
-                        Token::Other(content) => println!("{}", content),
+                        Token::Other(_) => {},
                    } 
                 }
             }

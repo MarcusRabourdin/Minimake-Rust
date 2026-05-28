@@ -20,7 +20,7 @@ fn main() -> Result<> {
     }
     
     let makefile_data = lex(&file);
-    //makefile_data.print();
+    makefile_data.print();
 
     Ok(())
 }
