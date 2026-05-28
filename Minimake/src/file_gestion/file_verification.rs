@@ -4,7 +4,7 @@ fn get_fomated_path(path: &str) -> PathBuf {
     let formated_path =  PathBuf::from(path);
     let fullpath = fs::canonicalize(&formated_path);
     let return_path = fullpath.unwrap();
-    println!("{:?}",return_path);
+    //println!("{:?}",return_path);
     return_path
 }
 
