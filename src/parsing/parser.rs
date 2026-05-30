@@ -1,5 +1,6 @@
 use crate::lexing::lexer::Lexer;
 use crate::lexing::lexer::Token;
+
 struct Rule {
     target : String,
     dep : Vec<String>,
@@ -64,12 +65,12 @@ pub fn parse(lexer : &Lexer) -> Result<Parser,i32> {
 }
 
 impl Parser {
-    pub fn add_variable(&mut self, var: &str) -> Result<i32,&str>
+    fn add_variable(&mut self, var: &str) -> Result<i32,&str>
     {
         self.in_rule = false;
 
-        let equal_indice = var.find('=').unwrap_or(0xc0ffe);
-        if equal_indice == 0xc0ffe { return Err("there is no = in this rule");};
+        let equal_indice = var.find('=').unwrap_or(0xc0ffee);
+        if equal_indice == 0xc0ffee { return Err("there is no = in this rule");};
 
         let name = &var[..equal_indice].trim();
         if var.to_string().len() <= equal_indice+1 { return Err("there is no content") };
@@ -82,14 +83,21 @@ impl Parser {
         Ok(0)
     }
 
-    pub fn add_rule(&mut self, target : &str, dep : &str) -> Result <i32, &str>
+    fn add_rule(&mut self, target : &str, dep : &str) -> Result <i32, &str>
     {
         self.in_rule = true;
+        
+        let _target = target.trim_start();
+        let _dep = 
+
+        let rule = Rule {target: _target, dep: }
+         
+        
         
         Ok(0)
     }
 
-    pub fn add_recipe(&mut self, recipe : &str) -> Result<i32,&str> {
+    fn add_recipe(&mut self, recipe : &str) -> Result<i32,&str> {
         
         if !self.in_rule {
             return Err("trying to add a recipe outside a rule");
