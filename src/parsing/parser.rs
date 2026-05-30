@@ -1,10 +1,13 @@
+use std::ptr::null;
+
 use crate::lexing::lexer::Lexer;
 use crate::lexing::lexer::Token;
+
 
 struct Rule {
     target : String,
     dep : Vec<String>,
-    recip : Vec<String>,
+    recip : Option<Vec<String>>,
 }
 
 struct Variable {
@@ -64,6 +67,18 @@ pub fn parse(lexer : &Lexer) -> Result<Parser,i32> {
     Ok(parser)    
 }
 
+fn parse_dep(dep : &str) -> Vec<String> {
+
+    let splited : Vec<String> = dep
+        .split(' ')
+        .filter(|element| element.is_empty())
+        .map(|element| element.to_string())
+        .collect();
+
+    splited
+}
+
+
 impl Parser {
     fn add_variable(&mut self, var: &str) -> Result<i32,&str>
     {
@@ -81,19 +96,19 @@ impl Parser {
         self.variables.push(variable); 
 
         Ok(0)
-    }
+    } 
 
     fn add_rule(&mut self, target : &str, dep : &str) -> Result <i32, &str>
     {
         self.in_rule = true;
         
         let _target = target.trim_start();
-        let _dep = 
+        let _dep = parse_dep(dep);
 
-        let rule = Rule {target: _target, dep: }
-         
-        
-        
+        let rule = Rule {target: _target.to_string(), dep: _dep, recip: None};
+
+        self.rules.push(rule); 
+                
         Ok(0)
     }
 
@@ -102,6 +117,7 @@ impl Parser {
         if !self.in_rule {
             return Err("trying to add a recipe outside a rule");
         }
+                
 
         Ok(0)
 
