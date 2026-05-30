@@ -47,3 +47,26 @@ pub fn parse(lexer : &Lexer) -> Parser {
     parser    
 }
 
+impl Parser {
+    pub fn add_variable(&mut self, var: String)
+    {
+        self.in_rule = false;
+
+        let equal_indice = var.find('=').unwrap();
+        let name = &var[..equal_indice];
+        let content = &var[equal_indice+1..].trim_start();
+        let variable = Variable { name : name.to_string(), content : content.to_string(), };
+        self.variables.push(variable); 
+    }
+
+    pub fn add_rule(&mut self, target : String, dep : String)
+    {
+        self.in_rule = false;
+        
+    }
+
+    pub fn add_recipe(&mut self, recipe : String) {
+
+
+    }
+}
