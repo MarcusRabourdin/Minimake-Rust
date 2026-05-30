@@ -73,29 +73,30 @@ impl Lexer {
 
 fn get_token(line: &String) -> Token
 {
-    let index = line.find('=');
-    if index.unwrap_or(usize::MAX) != usize::MAX
+    // Variable case
+    if line.find('=').unwrap_or(0xc0ffee) != 0xc0ffee
     {
         return Token::Variable(line.to_string()); 
     }
+    
+    // Rule case
+    let index = line.find(':').unwrap_or(0xc0ffee);
 
-    let index = line.find(':');
-
-    if index.unwrap_or(usize::MAX) != usize::MAX {
-
-        let rule : &str = &line[0..index.unwrap()];
-        let mut dep : &str = &line[index.unwrap()+1..];
+    if index != 0xc0ffee {
+        let rule : &str = &line[0..index];
+        let mut dep : &str = &line[index+1..];
         if dep == " " { dep = ""; }
 
         else {dep.to_string().insert(0,' ')}
         return Token::Rule(rule.to_string(),dep.to_string());
     }
 
-    let index = line.find('\t');
-    if index.unwrap_or(usize::MAX) != usize::MAX {
+    // Recipe case
+    if line.find('\t').unwrap_or(0xc0ffee) != 0xc0ffee { 
         return Token::Recipe(line.to_string());
     }
 
+    // Other case
     Token::Other(line.to_string())
 
 }
@@ -109,7 +110,7 @@ fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 }
 
 
-pub fn lex(file: &str) -> Lexer {
+pub fn lex(file: &str) -> Result<Lexer,i32> {
     
     let mut lexer = lexer_create();
     if let Ok(lines) = read_lines(file) {
@@ -119,6 +120,7 @@ pub fn lex(file: &str) -> Lexer {
             lexer.add_token(token);
         }
     }
-    lexer
+
+    Ok(lexer)
 }
 
